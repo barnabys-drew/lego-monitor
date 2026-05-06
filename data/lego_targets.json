@@ -1,0 +1,101 @@
+{
+  "generated": "2026-05-06T15:48:04.548604",
+  "total_sets_analyzed": 7,
+  "top_buys": [
+    {
+      "set_id": "10179",
+      "name": "Star Wars Millennium Falcon (UCS)",
+      "theme": "Star Wars",
+      "retail_price": 499.99,
+      "current_price": 4500,
+      "appreciation_ratio": "9.00x",
+      "buy_score": 75,
+      "rarity": "very_rare",
+      "pieces": 5195,
+      "notes": "Original UCS flagship set, highest appreciation recorded"
+    },
+    {
+      "set_id": "10030",
+      "name": "Star Wars Imperial Star Destroyer (UCS)",
+      "theme": "Star Wars",
+      "retail_price": 269.99,
+      "current_price": 2500,
+      "appreciation_ratio": "9.26x",
+      "buy_score": 75,
+      "rarity": "very_rare",
+      "pieces": 3104,
+      "notes": "Early UCS set, extreme rarity"
+    },
+    {
+      "set_id": "10182",
+      "name": "Modular Buildings - Cafe Corner",
+      "theme": "Modular",
+      "retail_price": 149.99,
+      "current_price": 2400,
+      "appreciation_ratio": "16.00x",
+      "buy_score": 70,
+      "rarity": "very_rare",
+      "pieces": 2056,
+      "notes": "First modular building, foundation of series"
+    },
+    {
+      "set_id": "10189",
+      "name": "Creator Expert - Taj Mahal",
+      "theme": "Creator Expert",
+      "retail_price": 369.99,
+      "current_price": 2800,
+      "appreciation_ratio": "7.57x",
+      "buy_score": 70,
+      "rarity": "rare",
+      "pieces": 5922,
+      "notes": "Iconic architecture, original version only"
+    },
+    {
+      "set_id": "71040",
+      "name": "Disney Castle",
+      "theme": "Creator Expert",
+      "retail_price": 349.99,
+      "current_price": 850,
+      "appreciation_ratio": "2.43x",
+      "buy_score": 70,
+      "rarity": "uncommon",
+      "pieces": 4080,
+      "notes": "Currently 2.4x retail, still room to grow"
+    },
+    {
+      "set_id": "10185",
+      "name": "Modular Buildings - Green Grocer",
+      "theme": "Modular",
+      "retail_price": 149.99,
+      "current_price": 1800,
+      "appreciation_ratio": "12.00x",
+      "buy_score": 65,
+      "rarity": "rare",
+      "pieces": 2058,
+      "notes": "Early modular set, high collector demand"
+    },
+    {
+      "set_id": "10217",
+      "name": "Harry Potter Diagon Alley",
+      "theme": "Harry Potter",
+      "retail_price": 149.99,
+      "current_price": 650,
+      "appreciation_ratio": "4.33x",
+      "buy_score": 65,
+      "rarity": "rare",
+      "pieces": 2025,
+      "notes": "Retired HP set, appreciating but below peak"
+    }
+  ],
+  "undervalued_opportunities": [],
+  "strategy": {
+    "target_appreciation": "2.5x - 5x over 2-5 years",
+    "ideal_pieces": "2000+",
+    "preferred_themes": [
+      "Star Wars UCS",
+      "Creator Expert",
+      "Modular Buildings"
+    ],
+    "retirement_status": "Recently retired (1-3 years) ideal"
+  }
+}
