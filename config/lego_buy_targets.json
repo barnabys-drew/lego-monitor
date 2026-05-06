@@ -1,0 +1,34 @@
+{
+  "targets": [
+    {
+      "set_id": "10323",
+      "set_name": "Pirates of Barracuda Bay",
+      "max_buy_price": 350,
+      "target_condition": "Good",
+      "retailer": "BrickLink",
+      "priority": 5,
+      "quantity": 1,
+      "notes": ""
+    },
+    {
+      "set_id": "10278",
+      "set_name": "Police Station",
+      "max_buy_price": 200,
+      "target_condition": "Good",
+      "retailer": "BrickLink",
+      "priority": 4,
+      "quantity": 1,
+      "notes": ""
+    },
+    {
+      "set_id": "75324",
+      "set_name": "Star Wars AT-TE Walker",
+      "max_buy_price": 150,
+      "target_condition": "Good",
+      "retailer": "BrickLink",
+      "priority": 3,
+      "quantity": 1,
+      "notes": ""
+    }
+  ]
+}

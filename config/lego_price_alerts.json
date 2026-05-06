@@ -1,0 +1,37 @@
+{
+  "alerts": [
+    {
+      "date": "2026-05-06 18:35:04",
+      "set_id": "10323",
+      "set_name": "Pirates of Barracuda Bay",
+      "current_price": 320,
+      "target_price": 350,
+      "discount": 30,
+      "source": "BrickLink",
+      "alert_type": "PRICE_DROP",
+      "condition": "Like New"
+    },
+    {
+      "date": "2026-05-06 18:35:04",
+      "set_id": "10323",
+      "set_name": "Pirates of Barracuda Bay",
+      "current_price": 345,
+      "target_price": 350,
+      "discount": 5,
+      "source": "eBay",
+      "alert_type": "PRICE_DROP",
+      "condition": "Like New"
+    },
+    {
+      "date": "2026-05-06 18:35:04",
+      "set_id": "75324",
+      "set_name": "Star Wars AT-TE Walker",
+      "current_price": 140,
+      "target_price": 150,
+      "discount": 10,
+      "source": "BrickLink",
+      "alert_type": "PRICE_DROP",
+      "condition": "Good"
+    }
+  ]
+}
