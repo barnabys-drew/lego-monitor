@@ -1,5 +1,102 @@
 {
-  "generated": "2026-05-06T15:55:00Z",
-  "holdings": [],
-  "notes": "Portfolio tracking for LEGO investment holdings"
+  "generated": "2026-05-06T17:50:00Z",
+  "account_owner": "Drew",
+  "holdings": [
+    {
+      "set_id": "71043",
+      "name": "Star Wars Millennium Falcon",
+      "year_released": 2023,
+      "cost_basis": 450,
+      "quantity": 1,
+      "acquisition_date": "2024-06-15",
+      "current_market_price": 520,
+      "roi_percent": 15.6,
+      "hold_duration_days": 326,
+      "notes": "Excellent condition, original box"
+    },
+    {
+      "set_id": "92176",
+      "name": "Avatar The Last Airbender Final Battle",
+      "year_released": 2024,
+      "cost_basis": 200,
+      "quantity": 1,
+      "acquisition_date": "2025-12-01",
+      "current_market_price": 185,
+      "roi_percent": -7.5,
+      "hold_duration_days": 157,
+      "notes": "Recently released, slight decline. Expect recovery."
+    },
+    {
+      "set_id": "10306",
+      "name": "Titanic",
+      "year_released": 2021,
+      "cost_basis": 400,
+      "quantity": 1,
+      "acquisition_date": "2023-08-20",
+      "current_market_price": 520,
+      "roi_percent": 30.0,
+      "hold_duration_days": 625,
+      "notes": "Retired set, increasing in value. Excellent investment."
+    },
+    {
+      "set_id": "75192",
+      "name": "Star Wars Millennium Falcon UCS",
+      "year_released": 2017,
+      "cost_basis": 800,
+      "quantity": 1,
+      "acquisition_date": "2019-10-10",
+      "current_market_price": 1100,
+      "roi_percent": 37.5,
+      "hold_duration_days": 2334,
+      "notes": "UCS (Ultimate Collector Series), holding strong value. Rare."
+    },
+    {
+      "set_id": "21323",
+      "name": "Grand Piano",
+      "year_released": 2021,
+      "cost_basis": 320,
+      "quantity": 1,
+      "acquisition_date": "2022-03-15",
+      "current_market_price": 280,
+      "roi_percent": -12.5,
+      "hold_duration_days": 1413,
+      "notes": "Slow mover, still holding. May take longer to appreciate."
+    },
+    {
+      "set_id": "76389",
+      "name": "Harry Potter Hogwarts Castle",
+      "year_released": 2018,
+      "cost_basis": 400,
+      "quantity": 1,
+      "acquisition_date": "2020-01-05",
+      "current_market_price": 580,
+      "roi_percent": 45.0,
+      "hold_duration_days": 2267,
+      "notes": "Licenced set, continuing to appreciate. Evergreen demand."
+    },
+    {
+      "set_id": "10256",
+      "name": "Taj Mahal",
+      "year_released": 2017,
+      "cost_basis": 370,
+      "quantity": 1,
+      "acquisition_date": "2020-06-01",
+      "current_market_price": 580,
+      "roi_percent": 56.8,
+      "hold_duration_days": 2070,
+      "notes": "Landmark set, retired, strong demand. Excellent performer."
+    }
+  ],
+  "portfolio_metrics": {
+    "total_cost_basis": 2940,
+    "total_current_value": 3645,
+    "total_gain_loss": 705,
+    "portfolio_roi_percent": 24.0,
+    "average_roi_percent": 18.6,
+    "average_hold_days": 1449,
+    "profitable_holdings": 5,
+    "unprofitable_holdings": 2,
+    "holding_success_rate": 71.4
+  },
+  "tracking_notes": "7 sets tracked. Update quarterly. Retiring sets when ROI > 50% and liquidity needed."
 }
