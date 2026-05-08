@@ -18,6 +18,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+from purchase_alert_system import LEGOAlertSystem
+
 # Logging
 logging.basicConfig(
     level=logging.INFO,
@@ -102,6 +104,7 @@ class LegoMarketScraper:
         self._load_targets()
         self._load_portfolio()
         self._load_price_cache()
+        self.alert_system = LEGOAlertSystem(config_dir="./config")
     
     def _load_targets(self):
         """Load target sets from JSON"""
@@ -357,7 +360,21 @@ class LegoMarketScraper:
         
         # Update portfolio metrics
         self.update_portfolio_metrics()
-        
+
+        # Check buy targets against freshly scraped prices
+        market_data = {
+            set_id: {
+                "bricklink_price": t.current_price,
+                "condition": "Used",
+            }
+            for set_id, t in self.targets.items()
+            if t.current_price
+        }
+        alerts = self.alert_system.check_all_targets(market_data)
+        if alerts:
+            posted = self.alert_system.send_discord_alerts(alerts)
+            logger.info(f"Purchase alerts: {len(alerts)} triggered, {posted} Discord posts sent")
+
         logger.info(f"Scrape cycle complete")
     
     async def run_loop(self, interval_seconds: int = 3600):

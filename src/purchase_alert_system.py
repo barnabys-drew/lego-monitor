@@ -11,6 +11,8 @@ Workflow:
 """
 
 import json
+import os
+import requests
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -300,6 +302,40 @@ class LEGOAlertSystem:
 
         lines.append("=" * 70)
         return "\n".join(lines)
+
+    def send_discord_alerts(self, alerts: List[Dict]) -> int:
+        """Post price-drop alerts to Discord webhook. Returns number posted."""
+        webhook_url = os.environ.get("DISCORD_WEBHOOK_URL", "").strip()
+        if not webhook_url or not alerts:
+            return 0
+
+        posted = 0
+        for alert in alerts:
+            discount_pct = (alert["discount"] / alert["target_price"]) * 100 if alert["target_price"] else 0
+            embed = {
+                "title": f"\U0001f9f1 LEGO BUY ALERT: {alert['set_name']}",
+                "color": 0x00cc44,
+                "fields": [
+                    {"name": "Set ID",       "value": alert["set_id"],                       "inline": True},
+                    {"name": "Price",        "value": f"${alert['current_price']:.2f}",       "inline": True},
+                    {"name": "Target",       "value": f"${alert['target_price']:.2f}",        "inline": True},
+                    {"name": "Savings",      "value": f"${alert['discount']:.2f} ({discount_pct:.0f}% under target)", "inline": True},
+                    {"name": "Source",       "value": alert.get("source", "?"),               "inline": True},
+                    {"name": "Condition",    "value": alert.get("condition", "Unknown"),       "inline": True},
+                ],
+                "timestamp": datetime.utcnow().isoformat(),
+            }
+            try:
+                r = requests.post(
+                    webhook_url,
+                    json={"username": "Argus LEGO", "embeds": [embed]},
+                    timeout=10,
+                )
+                if r.status_code in (200, 204):
+                    posted += 1
+            except Exception:
+                pass
+        return posted
 
 
 def example_usage():
