@@ -19,6 +19,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from purchase_alert_system import LEGOAlertSystem
+from ebay_price_monitor import fetch_ebay_price
 
 # Logging
 logging.basicConfig(
@@ -225,12 +226,18 @@ class LegoMarketScraper:
             price = None
             source = None
 
-            # Try BrickEconomy first
-            price = await self.fetch_brickeconomy_price(set_id)
+            # Try eBay first — actual market pricing, not Cloudflare-blocked
+            price = fetch_ebay_price(set_id, getattr(target, 'name', ''))
             if price:
-                source = "BrickEconomy"
+                source = "eBay"
 
-            # Fallback to BrickLink if needed
+            # Fallback to BrickEconomy (Cloudflare-blocked, kept for diagnostic)
+            if not price:
+                price = await self.fetch_brickeconomy_price(set_id)
+                if price:
+                    source = "BrickEconomy"
+
+            # Fallback to BrickLink if needed (also Cloudflare-blocked)
             if not price:
                 price = await self.fetch_bricklink_price(set_id)
                 if price:
