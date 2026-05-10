@@ -31,13 +31,14 @@ Dead-letter record schema:
 """
 from __future__ import annotations
 
+import contextlib
 import json
 import os
 import tempfile
 import time
 import urllib.error
 import urllib.request
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -46,7 +47,7 @@ TRANSIENT_HTTP = {408, 429, 500, 502, 503, 504}
 
 
 def _now_iso() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _post_once(webhook_url: str, payload: dict[str, Any], timeout: int = 10) -> tuple[bool, str]:
@@ -75,11 +76,12 @@ def _post_once(webhook_url: str, payload: dict[str, Any], timeout: int = 10) -> 
 
 def _is_transient_reason(reason: str) -> bool:
     """Should this failure be retried?"""
-    if "URLError" in reason or "Exception" in reason:
-        return True  # network blips
-    if "transient=True" in reason:
-        return True
-    return False
+    # Network blips (URLError/Exception) plus our own "transient=True" tag.
+    return (
+        "URLError" in reason
+        or "Exception" in reason
+        or "transient=True" in reason
+    )
 
 
 def _append_dead_letter(path: Path, record: dict) -> None:
@@ -138,10 +140,8 @@ def _atomic_write_jsonl(path: Path, records: list[dict]) -> None:
             os.fsync(f.fileno())
         os.replace(tmp, path)
     except Exception:
-        try:
+        with contextlib.suppress(OSError):
             os.unlink(tmp)
-        except OSError:
-            pass
         raise
 
 
