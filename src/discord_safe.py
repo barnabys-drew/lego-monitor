@@ -29,6 +29,7 @@ Dead-letter record schema:
         "attempts": 3                        # how many tries already
     }
 """
+
 from __future__ import annotations
 
 import contextlib
@@ -50,7 +51,9 @@ def _now_iso() -> str:
     return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def _post_once(webhook_url: str, payload: dict[str, Any], timeout: int = 10) -> tuple[bool, str]:
+def _post_once(
+    webhook_url: str, payload: dict[str, Any], timeout: int = 10
+) -> tuple[bool, str]:
     """Single POST attempt. Returns (ok, reason)."""
     body = json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(
@@ -77,11 +80,7 @@ def _post_once(webhook_url: str, payload: dict[str, Any], timeout: int = 10) -> 
 def _is_transient_reason(reason: str) -> bool:
     """Should this failure be retried?"""
     # Network blips (URLError/Exception) plus our own "transient=True" tag.
-    return (
-        "URLError" in reason
-        or "Exception" in reason
-        or "transient=True" in reason
-    )
+    return "URLError" in reason or "Exception" in reason or "transient=True" in reason
 
 
 def _append_dead_letter(path: Path, record: dict) -> None:
