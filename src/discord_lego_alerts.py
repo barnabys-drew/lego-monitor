@@ -6,9 +6,13 @@ Integrates with BrickLinkMonitor to send deal notifications.
 import os
 from datetime import datetime
 
-import requests
-
+import discord_safe
 from bricklink_price_monitor import BrickLinkMonitor
+
+DEAD_LETTER_PATH = os.environ.get(
+    "DISCORD_DEAD_LETTER_PATH",
+    "/home/drewt_p_weiner/code/.claude/missed_alerts.jsonl",
+)
 
 
 class LEGODiscordAlerter:
@@ -49,26 +53,25 @@ class LEGODiscordAlerter:
             print("\n⏳ No current deals. Market prices above target.")
 
     def _post_to_discord(self, report: dict) -> dict:
-        """Post formatted report to Discord webhook"""
-        try:
-            if not report["recommendations"]:
-                content = "📊 LEGO Market Report: No deals below target right now. Monitoring continues."
-            else:
-                content = self._format_message(report)
-
-            payload = {"content": content}
-            resp = requests.post(self.webhook_url, json=payload, timeout=10)
-
-            if resp.status_code in (200, 204):
-                return {
-                    "posted": True,
-                    "message_count": 1,
-                    "deals_posted": len(report["recommendations"]),
-                }
-            else:
-                return {"posted": False, "status_code": resp.status_code}
-        except Exception as e:
-            return {"posted": False, "error": str(e)}
+        """Post formatted report to Discord webhook with retry + dead-letter."""
+        if not report["recommendations"]:
+            content = "📊 LEGO Market Report: No deals below target right now. Monitoring continues."
+        else:
+            content = self._format_message(report)
+        payload = {"content": content}
+        ok = discord_safe.safe_post(
+            self.webhook_url,
+            payload,
+            dead_letter_path=DEAD_LETTER_PATH,
+            source="lego-monitor:price-report",
+        )
+        if ok:
+            return {
+                "posted": True,
+                "message_count": 1,
+                "deals_posted": len(report["recommendations"]),
+            }
+        return {"posted": False, "queued_to_dead_letter": True}
 
     def _format_message(self, report: dict) -> str:
         """Format report as Discord message"""

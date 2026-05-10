@@ -16,7 +16,12 @@ from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
 
-import requests
+import discord_safe
+
+DEAD_LETTER_PATH = os.environ.get(
+    "DISCORD_DEAD_LETTER_PATH",
+    "/home/drewt_p_weiner/code/.claude/missed_alerts.jsonl",
+)
 
 
 @dataclass
@@ -347,16 +352,14 @@ class LEGOAlertSystem:
                 ],
                 "timestamp": datetime.utcnow().isoformat(),
             }
-            try:
-                r = requests.post(
-                    webhook_url,
-                    json={"username": "Argus LEGO", "embeds": [embed]},
-                    timeout=10,
-                )
-                if r.status_code in (200, 204):
-                    posted += 1
-            except Exception:
-                pass
+            ok = discord_safe.safe_post(
+                webhook_url,
+                {"username": "Argus LEGO", "embeds": [embed]},
+                dead_letter_path=DEAD_LETTER_PATH,
+                source="lego-monitor:buy-alert",
+            )
+            if ok:
+                posted += 1
         return posted
 
 
