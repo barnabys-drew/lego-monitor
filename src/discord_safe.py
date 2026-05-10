@@ -51,9 +51,7 @@ def _now_iso() -> str:
     return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def _post_once(
-    webhook_url: str, payload: dict[str, Any], timeout: int = 10
-) -> tuple[bool, str]:
+def _post_once(webhook_url: str, payload: dict[str, Any], timeout: int = 10) -> tuple[bool, str]:
     """Single POST attempt. Returns (ok, reason)."""
     body = json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(
