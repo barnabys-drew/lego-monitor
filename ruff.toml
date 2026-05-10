@@ -1,0 +1,18 @@
+target-version = "py312"
+line-length = 110
+extend-exclude = ["data", "**/__pycache__"]
+
+[lint]
+select = ["E", "F", "B", "I", "UP", "SIM", "RUF"]
+ignore = [
+    "E501",   # line too long
+    "E402",   # late imports — load_dotenv() before module imports is intentional here
+    "RUF001", # ambiguous-unicode-character-string
+    "RUF003", # ambiguous-unicode-character-comment
+    "RUF012", # mutable-class-default — common pattern in this codebase
+    "SIM117", # nested with — readable as-is
+    "E722",   # bare-except — fix incrementally, not blocking
+]
+
+[lint.per-file-ignores]
+"test_*.py" = ["B011", "F401", "F811"]

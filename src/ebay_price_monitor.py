@@ -18,6 +18,7 @@ Why active listings instead of sold listings?
     'current ask' proxy; resale-arb users typically buy below this and sell
     at-or-above it.
 """
+
 from __future__ import annotations
 
 import base64
@@ -25,7 +26,6 @@ import logging
 import os
 import statistics
 import time
-from typing import List, Optional
 
 import requests
 
@@ -39,7 +39,7 @@ _SCOPE = "https://api.ebay.com/oauth/api_scope"
 _token_cache: dict = {"access_token": None, "expires_at": 0.0}
 
 
-def _get_credentials() -> Optional[tuple[str, str]]:
+def _get_credentials() -> tuple[str, str] | None:
     app_id = os.environ.get("EBAY_APP_ID", "").strip()
     cert_id = os.environ.get("EBAY_CERT_ID", "").strip()
     if not app_id or not cert_id:
@@ -47,7 +47,7 @@ def _get_credentials() -> Optional[tuple[str, str]]:
     return app_id, cert_id
 
 
-def _get_token(force_refresh: bool = False) -> Optional[str]:
+def _get_token(force_refresh: bool = False) -> str | None:
     """Return a cached or freshly-fetched eBay access token. None on auth failure."""
     now = time.time()
     if not force_refresh and _token_cache["access_token"] and now < _token_cache["expires_at"]:
@@ -82,7 +82,7 @@ def _get_token(force_refresh: bool = False) -> Optional[str]:
     return token
 
 
-def _search_listings(token: str, query: str, limit: int = 20) -> List[dict]:
+def _search_listings(token: str, query: str, limit: int = 20) -> list[dict]:
     """Call Browse API search, return raw item list."""
     try:
         resp = requests.get(
@@ -105,7 +105,7 @@ def _search_listings(token: str, query: str, limit: int = 20) -> List[dict]:
         return []
 
 
-def fetch_ebay_price(set_id: str, name: str = "", limit: int = 20) -> Optional[float]:
+def fetch_ebay_price(set_id: str, name: str = "", limit: int = 20) -> float | None:
     """Return median 'Used' active-listing price for `set_id`, or None if unavailable.
 
     Searches for `lego <set_id> <first 3 words of name>` to get tighter results,
@@ -125,7 +125,7 @@ def fetch_ebay_price(set_id: str, name: str = "", limit: int = 20) -> Optional[f
         queries.append(f"lego {set_id} {short_name}")
     queries.append(f"lego {set_id}")
 
-    items: List[dict] = []
+    items: list[dict] = []
     for q in queries:
         items = _search_listings(token, q, limit=limit)
         if items:
@@ -134,7 +134,7 @@ def fetch_ebay_price(set_id: str, name: str = "", limit: int = 20) -> Optional[f
     if not items:
         return None
 
-    prices: List[float] = []
+    prices: list[float] = []
     for item in items:
         # Skip auction-only listings (we want buy-it-now pricing)
         buying_options = set(item.get("buyingOptions") or [])

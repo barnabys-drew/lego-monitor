@@ -3,11 +3,8 @@ BrickLink Price Monitor - Phase 2
 Tracks current prices for target LEGO sets and identifies undervalued deals.
 """
 
-import json
-import requests
+from dataclasses import dataclass
 from datetime import datetime
-from typing import Dict, List, Optional
-from dataclasses import dataclass, asdict
 
 
 @dataclass
@@ -27,23 +24,31 @@ class BrickLinkMonitor:
 
     # Simulated current market prices (would fetch from BrickLink API in production)
     CURRENT_MARKET_PRICES = {
-        "10179": {"price": 3800, "condition": "Like New", "count": 2},  # Millennium Falcon
-        "10030": {"price": 2200, "condition": "Good", "count": 1},     # Imperial Star Destroyer
-        "10182": {"price": 2100, "condition": "Like New", "count": 1}, # Cafe Corner
-        "10189": {"price": 2400, "condition": "Good", "count": 3},     # Taj Mahal
+        "10179": {
+            "price": 3800,
+            "condition": "Like New",
+            "count": 2,
+        },  # Millennium Falcon
+        "10030": {
+            "price": 2200,
+            "condition": "Good",
+            "count": 1,
+        },  # Imperial Star Destroyer
+        "10182": {"price": 2100, "condition": "Like New", "count": 1},  # Cafe Corner
+        "10189": {"price": 2400, "condition": "Good", "count": 3},  # Taj Mahal
         "71040": {"price": 800, "condition": "Like New", "count": 5},  # Disney Castle
-        "10185": {"price": 1600, "condition": "Good", "count": 2},     # Green Grocer
-        "10217": {"price": 550, "condition": "Fair", "count": 4},      # Diagon Alley
+        "10185": {"price": 1600, "condition": "Good", "count": 2},  # Green Grocer
+        "10217": {"price": 550, "condition": "Fair", "count": 4},  # Diagon Alley
     }
 
     TARGET_BUY_PRICES = {
-        "10179": 3500,   # Millennium Falcon
-        "10030": 2000,   # Imperial Star Destroyer
-        "10182": 1900,   # Cafe Corner
-        "10189": 2200,   # Taj Mahal
-        "71040": 700,    # Disney Castle
-        "10185": 1500,   # Green Grocer
-        "10217": 500,    # Diagon Alley
+        "10179": 3500,  # Millennium Falcon
+        "10030": 2000,  # Imperial Star Destroyer
+        "10182": 1900,  # Cafe Corner
+        "10189": 2200,  # Taj Mahal
+        "71040": 700,  # Disney Castle
+        "10185": 1500,  # Green Grocer
+        "10217": 500,  # Diagon Alley
     }
 
     TARGET_NAMES = {
@@ -56,7 +61,7 @@ class BrickLinkMonitor:
         "10217": "Harry Potter Diagon Alley",
     }
 
-    def check_all_targets(self) -> List[LEGOPricePoint]:
+    def check_all_targets(self) -> list[LEGOPricePoint]:
         """Check current prices for all target sets"""
         deals = []
         for set_id, target_price in self.TARGET_BUY_PRICES.items():
@@ -73,13 +78,13 @@ class BrickLinkMonitor:
                     listed_count=market["count"],
                     best_condition=market["condition"],
                     last_updated=datetime.now().isoformat(),
-                    discount_vs_target=discount
+                    discount_vs_target=discount,
                 )
                 deals.append(deal)
 
         return deals
 
-    def identify_buy_signals(self, deals: List[LEGOPricePoint], min_discount: float = 3.0) -> List[Dict]:
+    def identify_buy_signals(self, deals: list[LEGOPricePoint], min_discount: float = 3.0) -> list[dict]:
         """
         Find sets that are currently at or below target buy price.
         min_discount: Only alert if discount is at least this % (3% = $60 off on $2000 set)
@@ -87,23 +92,25 @@ class BrickLinkMonitor:
         buy_signals = []
         for deal in deals:
             if deal.discount_vs_target >= min_discount:
-                buy_signals.append({
-                    "set_id": deal.set_id,
-                    "set_name": deal.set_name,
-                    "current_price": deal.current_price,
-                    "target_price": self.TARGET_BUY_PRICES[deal.set_id],
-                    "savings": self.TARGET_BUY_PRICES[deal.set_id] - deal.current_price,
-                    "discount_percent": deal.discount_vs_target,
-                    "condition": deal.best_condition,
-                    "available_count": deal.listed_count,
-                    "signal_strength": "BUY_NOW" if deal.discount_vs_target >= 5 else "MONITOR",
-                    "last_updated": deal.last_updated,
-                })
+                buy_signals.append(
+                    {
+                        "set_id": deal.set_id,
+                        "set_name": deal.set_name,
+                        "current_price": deal.current_price,
+                        "target_price": self.TARGET_BUY_PRICES[deal.set_id],
+                        "savings": self.TARGET_BUY_PRICES[deal.set_id] - deal.current_price,
+                        "discount_percent": deal.discount_vs_target,
+                        "condition": deal.best_condition,
+                        "available_count": deal.listed_count,
+                        "signal_strength": "BUY_NOW" if deal.discount_vs_target >= 5 else "MONITOR",
+                        "last_updated": deal.last_updated,
+                    }
+                )
 
         # Sort by savings (biggest discount first)
         return sorted(buy_signals, key=lambda x: x["savings"], reverse=True)
 
-    def generate_purchase_report(self) -> Dict:
+    def generate_purchase_report(self) -> dict:
         """Generate a complete purchase analysis report"""
         deals = self.check_all_targets()
         buy_signals = self.identify_buy_signals(deals)
@@ -119,25 +126,27 @@ class BrickLinkMonitor:
         }
         return report
 
-    def _score_recommendations(self, buy_signals: List[Dict]) -> List[Dict]:
+    def _score_recommendations(self, buy_signals: list[dict]) -> list[dict]:
         """Score and rank recommendations by investment potential"""
         scored = []
         for signal in buy_signals[:3]:  # Top 3 deals
             score = (
-                signal["discount_percent"] * 1.0 +  # % discount weight
-                (signal["available_count"] * 5) +    # Availability multiplier
-                (100 if signal["signal_strength"] == "BUY_NOW" else 50)  # Signal type
+                signal["discount_percent"] * 1.0  # % discount weight
+                + (signal["available_count"] * 5)  # Availability multiplier
+                + (100 if signal["signal_strength"] == "BUY_NOW" else 50)  # Signal type
             )
-            scored.append({
-                "recommendation_rank": len(scored) + 1,
-                "set_name": signal["set_name"],
-                "set_id": signal["set_id"],
-                "current_price": signal["current_price"],
-                "target_price": signal["target_price"],
-                "savings": signal["savings"],
-                "investment_score": round(score, 1),
-                "action": "BUY IMMEDIATELY" if signal["discount_percent"] >= 5 else "ADD TO WATCHLIST",
-                "condition": signal["condition"],
-                "reason": f"${signal['savings']} below target ({signal['discount_percent']:.1f}% off), {signal['available_count']} available",
-            })
+            scored.append(
+                {
+                    "recommendation_rank": len(scored) + 1,
+                    "set_name": signal["set_name"],
+                    "set_id": signal["set_id"],
+                    "current_price": signal["current_price"],
+                    "target_price": signal["target_price"],
+                    "savings": signal["savings"],
+                    "investment_score": round(score, 1),
+                    "action": "BUY IMMEDIATELY" if signal["discount_percent"] >= 5 else "ADD TO WATCHLIST",
+                    "condition": signal["condition"],
+                    "reason": f"${signal['savings']} below target ({signal['discount_percent']:.1f}% off), {signal['available_count']} available",
+                }
+            )
         return scored
