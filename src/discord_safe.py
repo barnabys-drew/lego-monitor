@@ -179,4 +179,4 @@ def replay(
     return replayed, len(survivors)
 
 
-__all__ = ["safe_post", "replay"]
+__all__ = ["replay", "safe_post"]
